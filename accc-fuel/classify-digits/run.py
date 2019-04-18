@@ -13,13 +13,13 @@ def split_num_img_to_digits(img):
         if digit_index_range == None:
             break
         start_index = digit_index_range[1] + 1
-        
+
         digit_image = np.zeros((8, 5), np.uint8)
         width = digit_index_range[1] - digit_index_range[0] + 1
 
         if width < 3:
             continue
-       
+
         digit_image[0:8, 5-width:5] = img[0:8, digit_index_range[0]:digit_index_range[1] + 1]
         images.append(digit_image)
     return images
@@ -30,18 +30,18 @@ def find_next_digit_index_range(img, start_index):
         if column_contains_pixel(img, i):
             result = (i, i)
             break
-    
+
     if result == None:
         return None
-    
+
     for i in range(result[0] + 1, min(result[0] + 5, img.shape[1])):
         if column_contains_pixel(img, i):
             result = (result[0], i)
         else:
             break
-    
+
     return result
-                
+
 def column_contains_pixel(img, column):
     for i in range(img.shape[0]):
         if img[i, column] > 0:
@@ -94,12 +94,6 @@ for image_name in image_names:
   img = cv2.imread(img_path, 0)
   img_digs = [[] for i in range(11)]
 
-  # num_y_points = 7
-
-  # if len(np.flip(split_num_img_to_digits(img[7 + 55:15 + 55, 25:48]), 0)) == 0 and len(np.flip(split_num_img_to_digits(img[7 + 47:15 + 47, 25:48]), 0)) == 0:
-  #   print image_name
-  #   print 'NOT 7 or 8'
-
   for i in range(7):
     for dig_image in np.flip(split_num_img_to_digits(img[7 + i*55:15 + i*55, 25:48]), 0):
       dig = None
@@ -112,12 +106,12 @@ for image_name in image_names:
             break
       except cv2.error:
         print 'failed'
-      
+
       if dig == None:
         dig = ask_image(dig_image)
-      
+
       img_digs[dig].append(dig_image)
-  
+
   for i in range(10):
     for dig_image in img_digs[i]:
       cv2.imwrite('./data/' + str(i) + '/' + image_name.split('.')[0] + '-' + str(uuid.uuid4()) + '.png', dig_image)
@@ -128,4 +122,3 @@ for image_name in image_names:
   done_file = open(done_file_path, 'a')
   done_file.write(image_name + "\n")
   done_file.close()
-
