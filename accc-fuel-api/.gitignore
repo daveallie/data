@@ -1,0 +1,4 @@
+node_modules
+venv
+analyse/__pycache__
+analyse/package
