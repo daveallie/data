@@ -8,7 +8,7 @@ region_types = ['adelaide/ulp', 'brisbane/ulp', 'melbourne/ulp', 'perth/ulp', 's
 
 def run(region_type, processing_date):
   images = get_last_10_images(region_type, processing_date)
-  images = [im for im in images if im is not None]
+  images = [im for im in images if im['img'] is not None]
   start_date = get_start_date(images[0]['key'])
 
   all_data = {}

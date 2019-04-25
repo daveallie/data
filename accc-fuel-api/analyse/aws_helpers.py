@@ -28,9 +28,12 @@ def get_start_date(key):
   return datetime_from_string(dynamo_response['Item']['Date']['S'])
 
 def get_image(key):
-  obj = boto3.resource('s3').Object('accc-fuel-images-2', key).get()
-  image = np.asarray(bytearray(obj['Body'].read()), dtype="uint8")
-  return cv2.imdecode(image, 0)
+  try:
+    obj = boto3.resource('s3').Object('accc-fuel-images-2', key).get()
+    image = np.asarray(bytearray(obj['Body'].read()), dtype="uint8")
+    return cv2.imdecode(image, 0)
+  except:
+    return None
 
 def get_last_10_images(region_type, processing_date):
   s3_keys = [s3_key_from_region_type_date(region_type, processing_date - timedelta(days=(9-i))) for i in range(10)]
