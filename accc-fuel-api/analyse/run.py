@@ -27,7 +27,7 @@ def run(region_type, processing_date):
     processed_image = cv2.erode(processed_image, kernel, iterations=1)
     contours0 = cv2.findContours(processed_image.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)[0]
     moments  = [cv2.moments(cnt) for cnt in contours0]
-    centroids = [(m['m10'] / m['m00'], m['m01'] / m['m00']) for m in moments]
+    centroids = [(m['m10'] / m['m00'], m['m01'] / m['m00']) for m in moments if m['m00'] > 0]
     centroids.sort(key=lambda tup: tup[0])
 
     # 10 is the whitespace above the graph and 330 is the size of the graph
@@ -88,5 +88,3 @@ def handler(event, context):
     processing_date = get_processing_date(region_type)
     if check_if_run_needed(region_type, processing_date):
       run(region_type, processing_date)
-
-handler(None, None)
